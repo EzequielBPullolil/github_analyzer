@@ -23,7 +23,7 @@ var mainCMD = &cobra.Command{
 
 		if len(args) == 1 {
 			username := args[0]
-			fmt.Printf("Scoring username @%s \n", colors.Magenta(username))
+			fmt.Printf("Scoring username @%s..... \n", colors.Magenta(username))
 			profileanalyzer.AnalyzeProfile(username)
 		}
 	},
