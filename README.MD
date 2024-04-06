@@ -5,7 +5,7 @@ github_analyzer is a CLI developed using Golang that analyzes your public GitHub
 
 
 ## Use 
-To check if your profile is presentable, you call the command and pass your username as a parameter with the "@" symbol.
+To check if your profile is presentable, you call the command and pass your username as a parameter
 
 
     github_analyzer @username
