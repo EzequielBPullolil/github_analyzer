@@ -1,7 +1,6 @@
 package profileanalyzer
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -9,7 +8,7 @@ import (
 )
 
 type Repository struct {
-	Url, Name string
+	Url, Name, ShorUrl string
 }
 
 func (e *Repository) CalculateCommits() int {
@@ -31,10 +30,9 @@ func (e *Repository) CalculateCommits() int {
 func (e Repository) HaveReadme() bool {
 	var haveReadme = true
 	c := colly.NewCollector()
-	c.OnHTML("span.Text-sc-17v1xeu-0", func(h *colly.HTMLElement) {
-		if h.Attr("class") == "Text-sc-17v1xeu-0 eJOnBv" {
-
-			fmt.Println(h.Text)
+	c.OnHTML("span[data-content]", func(h *colly.HTMLElement) {
+		if h.Attr("data-content") == "README" {
+			haveReadme = false
 		}
 	})
 	c.Visit(e.Url)
