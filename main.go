@@ -2,12 +2,18 @@ package main
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/EzequielBPullolil/github_analyzer/colors"
 	profileanalyzer "github.com/EzequielBPullolil/github_analyzer/profile_analyzer"
 	"github.com/spf13/cobra"
 )
+
+var empty_repos_flag bool
+
+func init() {
+	mainCMD.PersistentFlags().BoolVarP(&empty_repos_flag, "empty-repos", "", false, "verbose output")
+
+}
 
 var mainCMD = &cobra.Command{
 	Use:   "Github Analyzer",
@@ -20,16 +26,17 @@ var mainCMD = &cobra.Command{
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-
-		if len(args) == 1 {
-			username := args[0]
-			fmt.Printf("Scoring username @%s..... \n", colors.Magenta(username))
+		username := args[0]
+		if empty_repos_flag {
+			cmd.Println("Finding empty repos")
+			profileanalyzer.FindEmptyRepos(username)
+		} else {
+			cmd.Printf("Scoring username @%s..... \n", colors.Magenta(username))
 			profileanalyzer.AnalyzeProfile(username)
 		}
 	},
 }
 
 func main() {
-
 	mainCMD.Execute()
 }

@@ -8,9 +8,15 @@ import (
 )
 
 type Repository struct {
-	Url, Name, ShorUrl    string
-	have_readme, is_empty bool
-	cant_commits          int
+	Url, Name, ShorUrl string
+	have_readme        bool
+	cant_commits       int
+}
+
+func (r *Repository) CalculateCommits() {
+	c := colly.NewCollector()
+	r.calculateCommits(c)
+	c.Visit(r.Url)
 }
 
 func (r *Repository) GetData() {

@@ -42,7 +42,7 @@ func AnalyzePublicRepos(rs []Repository) (int, int, int, int) {
 
 		if repo.IsEmpty() {
 			empty_repos += 1
-			fmt.Println(repo.Url)
+
 		}
 	}
 
@@ -71,4 +71,27 @@ func AnalyzeProfile(username string) {
 	fmt.Printf("Empty repositories: %d \n", empty_repos)
 	fmt.Printf("Profile Readme: %s \n", ProfileHaveReadme(username))
 	fmt.Println(colors.Info("------------End------------"))
+}
+
+func FindEmptyRepos(username string) {
+	fmt.Println(colors.Info("Finding public repos....."))
+	repos := searchAllRepositories()
+	fmt.Println("Finding public empty repos...")
+	fmt.Printf("%s Repositories are considered empty if the number of commits in the main branch is less than 5 \n", colors.Warning("WARNING"))
+	PrintEmptyRepos(repos)
+
+	fmt.Println("Empty repos finded")
+}
+
+func PrintEmptyRepos(repos []Repository) {
+	var printData string
+	for _, repo := range repos {
+		repo.CalculateCommits()
+
+		if repo.IsEmpty() {
+			printData += fmt.Sprintf("- %s \n", colors.Fail(repo.Url))
+		}
+	}
+
+	fmt.Println(printData)
 }
