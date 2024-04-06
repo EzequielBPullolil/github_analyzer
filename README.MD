@@ -3,7 +3,16 @@ github_analyzer is a CLI developed using Golang that analyzes your public GitHub
 
 
 ## Install
+1. Clone Repo
+    ```bash
+    git clone https://github.com/EzequielBPullolil/github_analyzer && cd github_analyzer
+    ```
+2. Build and install
+    ```bash
+    go install 
+    ```
 
+Remember to have the Go binary directory properly configured to be able to use the `go install` command
 
 ## Use 
 To check if your profile is presentable, you call the command and pass your username as a parameter
