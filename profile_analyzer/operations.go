@@ -28,22 +28,25 @@ func searchAllRepositories() []Repository {
 	return repos
 }
 
-func AnalyzePublicRepos(rs []Repository) (int, int, int) {
-	fmt.Println("Calculate public repos score....")
+func AnalyzePublicRepos(rs []Repository) (int, int, int, int) {
+
 	total_commits := 0
 	total_no_readme_repos := 0
+	empty_repos := 0
 	for _, repo := range rs {
+		repo.GetData()
+		total_commits += repo.CantCommits()
 		if !repo.HaveReadme() {
 			total_no_readme_repos += 1
 		}
 
-		total_commits += repo.CalculateCommits()
-
+		if repo.IsEmpty() {
+			empty_repos += 1
+			fmt.Println(repo.Url)
+		}
 	}
 
-	fmt.Println("Public repos score calculated")
-	fmt.Println("-----------------------------")
-	return len(rs), total_commits, total_no_readme_repos
+	return len(rs), total_commits, total_no_readme_repos, empty_repos
 }
 
 func ProfileHaveReadme(username string) string {
@@ -58,12 +61,14 @@ func ProfileHaveReadme(username string) string {
 func AnalyzeProfile(username string) {
 	fmt.Println(colors.Info("Finding public repos....."))
 	repos := searchAllRepositories()
-
-	cant_repos, total_commits, total_no_readme_repos := AnalyzePublicRepos(repos)
+	fmt.Println("Analyzing public repositories....")
+	cant_repos, total_commits, total_no_readme_repos, empty_repos := AnalyzePublicRepos(repos)
+	fmt.Println("Public repositories analyzed")
+	fmt.Println("-----------------------------")
 	c_average := total_commits / cant_repos
 	fmt.Printf("Repositories without readme: %d/%d \n", total_no_readme_repos, cant_repos)
 	fmt.Printf("Commit average: %d \n", c_average)
-	fmt.Println("Empty repositories: 10")
+	fmt.Printf("Empty repositories: %d \n", empty_repos)
 	fmt.Printf("Profile Readme: %s \n", ProfileHaveReadme(username))
 	fmt.Println(colors.Info("------------End------------"))
 }
