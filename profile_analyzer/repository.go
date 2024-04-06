@@ -13,6 +13,12 @@ type Repository struct {
 	cant_commits       int
 }
 
+func (r *Repository) CalculateReadme() {
+	c := colly.NewCollector()
+	r.haveReadme(c)
+	c.Visit(r.Url)
+}
+
 func (r *Repository) CalculateCommits() {
 	c := colly.NewCollector()
 	r.calculateCommits(c)

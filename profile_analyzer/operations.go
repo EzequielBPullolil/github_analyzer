@@ -9,7 +9,7 @@ import (
 	"github.com/gocolly/colly"
 )
 
-func searchAllRepositories() []Repository {
+func searchAllRepositories(username string) []Repository {
 	var repos []Repository
 	state := colors.Green("found")
 	c := colly.NewCollector()
@@ -20,7 +20,7 @@ func searchAllRepositories() []Repository {
 		r.Url = fmt.Sprintf("https://github.com/%s", e.Attr("href"))
 		repos = append(repos, r)
 	})
-	c.Visit("https://github.com/EzequielBPullolil?tab=repositories")
+	c.Visit(fmt.Sprintf("https://github.com/%s?tab=repositories", username))
 	if len(repos) == 0 {
 		state = colors.Fail("not found")
 	}
@@ -60,7 +60,7 @@ func ProfileHaveReadme(username string) string {
 
 func AnalyzeProfile(username string) {
 	fmt.Println(colors.Info("Finding public repos....."))
-	repos := searchAllRepositories()
+	repos := searchAllRepositories(username)
 	fmt.Println("Analyzing public repositories....")
 	cant_repos, total_commits, total_no_readme_repos, empty_repos := AnalyzePublicRepos(repos)
 	fmt.Println("Public repositories analyzed")
@@ -75,7 +75,7 @@ func AnalyzeProfile(username string) {
 
 func FindEmptyRepos(username string) {
 	fmt.Println(colors.Info("Finding public repos....."))
-	repos := searchAllRepositories()
+	repos := searchAllRepositories(username)
 	fmt.Println("Finding public empty repos...")
 	fmt.Printf("%s Repositories are considered empty if the number of commits in the main branch is less than 5 \n", colors.Warning("WARNING"))
 	PrintEmptyRepos(repos)
@@ -94,4 +94,26 @@ func PrintEmptyRepos(repos []Repository) {
 	}
 
 	fmt.Println(printData)
+}
+
+func PrintRepositoresWithoutReadme(rs []Repository) {
+	var printData string
+	for _, repo := range rs {
+		repo.CalculateReadme()
+
+		if !repo.HaveReadme() {
+			printData += fmt.Sprintf("- %s \n", colors.Fail(repo.Url))
+		}
+	}
+
+	fmt.Println(printData)
+}
+
+func FindNoReadmeRepos(username string) {
+	fmt.Println(colors.Info("Finding public repos....."))
+	repos := searchAllRepositories(username)
+	fmt.Println("Searching repositories without README...")
+	PrintRepositoresWithoutReadme(repos)
+
+	fmt.Println("Empty repos finded")
 }
