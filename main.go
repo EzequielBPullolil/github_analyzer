@@ -12,8 +12,8 @@ var empty_repos_flag bool
 var readme_repos_flag bool
 
 func init() {
-	mainCMD.PersistentFlags().BoolVarP(&empty_repos_flag, "empty-repos", "", false, "verbose output")
-	mainCMD.PersistentFlags().BoolVarP(&readme_repos_flag, "readme-repos", "", false, "verbose output")
+	mainCMD.PersistentFlags().BoolVarP(&empty_repos_flag, "empty-repos", "", false, "print empty public repos")
+	mainCMD.PersistentFlags().BoolVarP(&readme_repos_flag, "readme-repos", "", false, "print public repos without readme")
 
 }
 
